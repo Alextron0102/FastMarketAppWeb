@@ -1,136 +1,90 @@
 <template>
   <div>
-    <h1 class="title">
-      Registrar pago para deuda ID: {{model.idDeuda}}
-    </h1>
-    <h2 class="subtitle">
-      Introduzca los pagos del cliente.
-    </h2>
+    <h1 class="title">Registrar pago para deuda ID: {{ model.idDeuda }}</h1>
+    <h2 class="subtitle">Introduzca los pagos de la deuda.</h2>
 
     <Loader v-if="isLoading" />
     <form v-else @submit.prevent="save">
-      <div class="field">
-        <p> Ingrese la fecha de la compra: </p>
-        <input          
-          v-model="model.fecha"
-          class="input"
-          type="date"
-          placeholder="Ingrese la fecha"
-        />
+      <div style="height: 50px" class="columns is-mobile">
+        Monto incial por el que se generó la deuda: {{ model.montoInicial }}
+        <br />
+        Monto por el cual se debe actualmente: {{ model.montoAcumulado }}
+        <br/>
+        Fecha en la cual se registró: {{model.fechaInicio}}
       </div>
 
-      <div class="field">
-        <p> Ingrese el metodo de pago: </p>
-        <div class="select is-fullwidth">
-          <select v-model="model.estadoPago">
-            <option
-              v-for="item in this.tipoPago"
-              :key="item.secret"
-              :value="item.secret"
-            >{{item.value}}</option>
-          </select>
+      <div style="height: 50px" class="columns is-mobile">
+        <div class="column has-text-right">
+          <a @click="AgregarPago()"><button  type="button" class="button is-primary">
+            Agregar pago
+          </button></a>
         </div>
       </div>
-      
-      <div class="field" v-if="(model.estadoPago === 'PagoParte') ">
-        <p> Ingrese el monto pagado: </p>
-        <input          
-          v-model="model.montoPagado"
-          class="input"
-          type="text"
-          placeholder="Ingrese el monto pagado"
-        />
-      </div>
 
-      <div/>
-
-      <div class="field" v-if="(model.estadoPago === 'PorPagar') ||  (model.estadoPago === 'PagoParte')">
-          <p> Elija la tasa: </p>
-        <div class="select is-fullwidth">
-          <select v-model="model.idTasa">
-            <option
-              v-for="item in this.tasas"
-              :key="item.idTasa"
-              :value="item.idTasa"
-            >{{item.valor+"% - "+ item.tipoTasaMuestra}}</option>
-          </select>
-        </div>
-      </div>
-      <p>Productos agregados:</p>
-      <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+      <table
+        class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth"
+      >
         <thead>
-          <th>Imagen</th>
-          <th>Nombre</th>
-          <th>Stock</th>
-          <th>Precio</th>
+          <th>Monto</th>
+          <th>Fecha</th>
           <th>Acciones</th>
         </thead>
         <tbody>
-          <tr v-for="item in this.model.detalleOrdenes" :key="item.idProducto">
+          <tr v-for="(item, index) in model.pagosold" :key="item.idPago? item.idPago : index">
             <td>
-              <figure class="image is-128x128">
-                <img :src="item.imagen">
-              </figure> 
+              <input
+              v-model="item.montoPago"
+              class="input"
+              type="number"
+              placeholder="Ingrese el monto"
+              />
             </td>
-            <td>{{item.nombre}}</td>
-            <td>{{item.stock}}</td>
-            <td>{{item.precio}}</td>
-            <td>
-              <a @click="EliminarProducto(item.idProducto)"><button type="button" class="button is-small is-danger is-centered">Eliminar</button></a>
+            <td>              
+              <input
+              v-model="item.fecha"
+              class="input"
+              type="date"
+              placeholder="seleccione la fecha"
+              />
+            </td>
+            <td>              
+              <a v-if="item.idPago === null" @click="EliminarPago(index)"><button  type="button" class="button is-danger is-small">
+                Eliminar
+              </button></a>
             </td>
           </tr>
-          <tr>
-            <td/><td/><td/>
-            <td> Precio final: </td>
-            <td>{{this.preciofinal}} </td>
-          </tr>
-        </tbody>
-      </table>
-      
-      <p>Catalogo de productos:</p>
-      <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-        <thead>
-          <th>Imagen</th>
-          <th>Nombre</th>
-          <th>Stock</th>
-          <th>Precio</th>
-          <th>Acciones</th>
-        </thead>
-        <tbody>
-          <tr v-for="item in this.productos.items" :key="item.idProducto">
+          <tr v-for="(item, index) in model.pagos" :key="item.idPago? item.idPago : index">
             <td>
-              <figure class="image is-128x128">
-                <img :src="item.imagen">
-              </figure> 
+              <input
+              v-model="item.montoPago"
+              class="input"
+              type="number"
+              placeholder="Ingrese el monto"
+              />
             </td>
-            <td>{{item.nombre}}</td>
-            <td>{{item.stock}}</td>
-            <td>{{item.precio}}</td>
-            <td>
-            <div>
-                <input
-                  v-model="item.cantidad"
-                  class="input"
-                  type="number"
-                  placeholder="cantidad"
-                />
-              </div>
-              <a @click="AgregarProducto(item.idProducto)"><button type="button" class="button is-small is-primary is-centered">Agregar</button></a>
+            <td>              
+              <input
+              v-model="item.fecha"
+              class="input"
+              type="date"
+              placeholder="seleccione la fecha"
+              />
+            </td>
+            <td>              
+              <a v-if="item.idPago === null" @click="EliminarPago(index)"><button  type="button" class="button is-danger is-small">
+                Eliminar
+              </button></a>
             </td>
           </tr>
         </tbody>
       </table>
-      <Pager :paging="p => getAll(p)" :page="this.productos.page" :pages="this.productos.pages" />
-      
+
       <div class="field">
         <button type="submit" class="button is-info">Guardar</button>
-        <router-link :to="{name: 'Ordenes'}">
-          <button class="button is-danger is-normal">
-            Salir
-          </button>
+        <router-link :to="{ name: 'Deudas' }">
+          <button class="button is-danger is-normal">Salir</button>
         </router-link>
       </div>
-
     </form>
   </div>
 </template>

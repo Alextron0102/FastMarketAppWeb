@@ -14,11 +14,16 @@ export default {
             user: this.$store.state.user,
             isLoading: false,
             model: {
+                idDeuda: null,
                 idTasa: null,
                 idCliente: null,
+                pagosold: [],
                 pagos: [],
                 //pagos: {idPago, montoPago, fecha}
-            },            
+                montoInicial: null,
+                montoAcumulado: null,
+                fechaInicio: null,
+            },       
             tipoTasa: {
                 'TasaEfectivaMensual': 'Tasa Efectiva Mensual',
                 'TasaNominalMensual': 'Tasa Nominal Mensual'
@@ -28,83 +33,40 @@ export default {
     },
     methods: {
         initialize() {
-            this.model.idCliente = this.$route.params.idCliente;
-            this.isLoading = true;
-            let flagtasas=false;
-            let flagproductos=false;
-            //Primero tenemos que cargar los productos y las tasas para que el administrador pueda elegir:
-            //Cargamos las tasas:
-            this.$proxies.tasaProxy.getAllSimple(1,1000).then(x=>{
-                this.tasas = x.data.items;
-                this.tasas.forEach(element => {
-                    element.tipoTasaMuestra = this.tipoTasa[element.tipoTasa];
+            this.model.idDeuda = this.$route.params.id;
+            //Tenemos que mostrar todos los pagos:
+            this.$proxies.deudaProxy.getById(this.model.idDeuda).then(x=>{
+                this.model.pagosold = x.data.pagos;
+                this.model.pagosold.forEach(element=>{
+                    element.fecha = element.fecha.slice(0,element.fecha.search("T"));
                 });
-                flagtasas = true;   
-                if(flagtasas && flagproductos){
-                    this.isLoading = false;
-                }        
+                this.model.idCliente = x.data.cliente.idCliente;
+                this.model.idTasa = x.data.tasa.idTasa;
+                this.model.montoInicial = x.data.montoInicial;
+                this.model.montoAcumulado = x.data.montoAcumulado;
+                this.model.fechaInicio = x.data.orden.fecha.slice(0,x.data.orden.fecha.search("T"));
             }).catch(() => {
                 this.$notify({
                     group: "global",
                     type: "is-danger",
-                    text: 'Ocurrió un error al momento de solicitar las tasas'
+                    text: 'Ocurrió un error inesperado'
                 });
-                this.$router.push({name: 'ClienteSeleccion'});
-            });
-            //Ahora cargamos los productos:
-            this.$proxies.productoProxy.getAllUser(1,10).then(x=>{
-                this.productos = x.data;
-                flagproductos = true;
-                if(flagtasas && flagproductos){
-                    this.isLoading = false;
-                }                               
-            }).catch(() => {
-                this.$notify({
-                    group: "global",
-                    type: "is-danger",
-                    text: 'Ocurrió un error al momento de solicitar las productos'
-                });
-                this.$router.push({name: 'ClienteSeleccion'});
-            });
+                this.$router.push({name: 'Deudas'});
+            });            
         },
-        ActualizarPrecioFinal(){
-            this.preciofinal =0;
-            this.model.detalleOrdenes.forEach(x=>{
-                this.preciofinal = this.preciofinal+x.precio;
-            });
-        },
-        EliminarProducto(id){
-            let indice = this.model.detalleOrdenes.indexOf(element=> element.idProducto === id);
-            this.model.detalleOrdenes.splice(indice,1);
-            this.ActualizarPrecioFinal();
-        },
-        AgregarProducto(id){  
-            let indice = this.model.detalleOrdenes.findIndex(element=> element.idProducto === id);
-            if(indice === -1){     
-                //Significa que no existe                  
-                let prod = this.productos.items.find(element=> element.idProducto === id);
-                this.model.detalleOrdenes.push({
-                        idProducto: prod.idProducto,
-                        cantidad: prod.cantidad,
-                        imagen: prod.imagen,
-                        nombre: prod.nombre,
-                        precio: (prod.precio*prod.cantidad),
-                        stock: prod.stock
-                    });
-                this.ActualizarPrecioFinal();
-            }
-        },
-        save() {
-            this.model.detalleOrdenes.forEach(x=>{x.cantidad = parseInt(x.cantidad);} );            
+        save() {         
             this.isLoading = true;
-            this.$proxies.ordenProxy.create(this.model)
+            this.model.pagos.forEach(element => {
+                element.montoPago = parseInt(element.montoPago);
+            });
+            this.$proxies.deudaProxy.update(this.model.idDeuda, this.model)
                 .then(() => {
                     this.$notify({
                         group: "global",
                         type: "is-success",
-                        text: 'Orden creado con éxito'
+                        text: 'Pago registrado con éxito'
                     });
-                    this.$router.push({name: 'Ordenes'});
+                    this.$router.push({name: 'Deudas'});
                 })
                 .catch(x => {
                     console.log(x.response);
@@ -115,6 +77,16 @@ export default {
                         text: x.response.data
                     });
                 });  
+        },
+        AgregarPago(){
+            this.model.pagos.push({
+                idPago: null,
+                montoPago: "",
+                fecha: ""
+            });
+        },
+        EliminarPago(index){
+            this.model.pagos.splice(index,1);
         }
     }
 }

@@ -12,12 +12,14 @@
         <thead>
           <th>Orden</th>
           <th>Cliente</th>
+          <th>Estado</th>
           <th>Acciones</th>
         </thead>
         <tbody>
           <tr v-for="item in collection.items" :key="item.idDeuda">
             <td>Estado: {{ item.orden.estadoPago }}<br/> Fecha: {{item.orden.fecha}}</td>
             <td>Nombres: {{ item.cliente.apellidos +', '+ item.cliente.nombres  }}</td>
+            <td>{{item.estadoDeuda}}</td>
             <td>
               <router-link :to="{ name: 'DeudaPago', params: {id: item.idDeuda} }">
                 <button type="button" class="button is-primary is-small">
