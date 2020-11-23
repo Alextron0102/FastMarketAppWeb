@@ -33,12 +33,12 @@ export default {
             },
             tipoTasa: [
                 {
-                    secret: 'TNA',
-                    value: 'TNA'
+                    secret: 'TasaNominalMensual',
+                    value: 'Tasa nominal mensual'
                 },
                 {
-                    secret: 'TEA',
-                    value: 'TEA'
+                    secret: 'TasaEfectivaMensual',
+                    value: 'Tasa efectiva diaria'
                 },
             ]
         }

@@ -4,6 +4,7 @@ import ProductoProxy from './ProductoProxy.js';
 import OrdenProxy from './OrdenProxy.js';
 import ClienteProxy from './ClienteProxy.js';
 import TasaProxy from './TasaProxy.js';
+import DeudaProxy from './DeudaProxy.js';
 // Axios default behavior
 Axios.defaults.headers.common.Accept = 'application/json';
 
@@ -41,4 +42,5 @@ export default{
     ordenProxy: new OrdenProxy(Axios,url),
     clienteProxy: new ClienteProxy(Axios,url),
     tasaProxy: new TasaProxy(Axios,url),
+    deudaProxy: new DeudaProxy(Axios,url),
 }

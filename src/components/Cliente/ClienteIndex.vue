@@ -19,6 +19,7 @@
           <th>Dni</th>
           <th>Telefono</th>
           <th>Direccion</th>
+          <th>Linea de credito</th>
           <th>Acciones</th>
         </thead>
         <tbody>
@@ -28,6 +29,7 @@
             <td>{{item.dni}}</td>
             <td>{{item.telefono}}</td>
             <td>{{item.direccion}}</td>
+            <td>Tope: {{item.lineaCredito}} <br/> Consumida: {{item.lineaConsumida}}</td>
             <td>
               <router-link :to="{name: 'ClienteModificar', params: {id: item.idCliente}}"><button type="button" class="button is-small is-link">Editar</button></router-link>
               <a @click="remove(item.idCliente)"><button type="button" class="button is-small is-danger">Eliminar</button></a>

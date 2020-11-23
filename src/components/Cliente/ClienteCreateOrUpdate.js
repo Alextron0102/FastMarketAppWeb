@@ -49,6 +49,8 @@ export default {
                 direccion: null,
                 telefono: null,
                 dni: null,
+                lineaCredito: null,
+                lineaConsumida: null,
             },
         }
     },
@@ -81,9 +83,9 @@ export default {
                             this.$notify({
                                 group: "global",
                                 type: "is-success",
-                                text: 'Producto actualizado con éxito'
+                                text: 'Cliente actualizado con éxito'
                             });
-                            this.$router.push({name: 'Productos'});
+                            this.$router.push({name: 'Clientes'});
                         })
                         .catch(() => {
                             this.isLoading = false;
@@ -99,9 +101,9 @@ export default {
                             this.$notify({
                                 group: "global",
                                 type: "is-success",
-                                text: 'Producto creado con éxito'
+                                text: 'Cliente creado con éxito'
                             });
-                            this.$router.push({name: 'Productos'});
+                            this.$router.push({name: 'Clientes'});
                         })
                         .catch(() => {
                             this.isLoading = false;

@@ -2,7 +2,7 @@ import Loader from '../../shared/Loader'
 import Pager from '../../shared/Pager'
 
 export default {
-    name: 'OrdenCreate',
+    name: 'DeudaPago',
     components: {
         Loader, Pager
     },
@@ -14,41 +14,11 @@ export default {
             user: this.$store.state.user,
             isLoading: false,
             model: {
-                idCliente: null,
-                estadoPago: null,
-                montoPagado: null,
-                detalleOrdenes: [],
-                //detalleOrden: {idProducto, Cantidad, idDetalleOrden}
                 idTasa: null,
-                fecha: null
-            },
-            productos: {
-                hasItems: false,
-                items: [],
-                total: 0,
-                page: 1,
-                pages: 0,
-                take: 10
-            },
-            tasas: [],
-            tipoPago:[
-                {
-                    secret: 'Pagado',
-                    value: 'Pagado'
-                },
-                {
-                    secret: 'PorPagar',
-                    value: 'Por pagar'
-                },
-                {
-                    secret: 'Pago0',
-                    value: 'Exonerado'
-                },
-                {
-                    secret: 'PagoParte',
-                    value: 'Pago parte'
-                }
-            ],
+                idCliente: null,
+                pagos: [],
+                //pagos: {idPago, montoPago, fecha}
+            },            
             tipoTasa: {
                 'TasaEfectivaMensual': 'Tasa Efectiva Mensual',
                 'TasaNominalMensual': 'Tasa Nominal Mensual'

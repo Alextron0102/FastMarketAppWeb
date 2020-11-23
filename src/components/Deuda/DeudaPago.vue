@@ -1,10 +1,10 @@
 <template>
   <div>
     <h1 class="title">
-      Registrar Orden para cliente ID: {{model.idCliente}}
+      Registrar pago para deuda ID: {{model.idDeuda}}
     </h1>
     <h2 class="subtitle">
-      Introduzca los datos de la orden.
+      Introduzca los pagos del cliente.
     </h2>
 
     <Loader v-if="isLoading" />
@@ -135,7 +135,7 @@
   </div>
 </template>
 
-<script src="./OrdenCreate.js"></script>
+<script src="./DeudaPago.js"></script>
 
 <style scoped>
 input[type="number"]::-webkit-outer-spin-button,

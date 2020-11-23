@@ -80,7 +80,22 @@ const routes = [
         path: '/tasa/update/:id',
         name: 'TasaModificar',
         component: () => import("../components/Tasa/TasaCreateOrUpdate.vue")
-    }
+    },
+    {
+        path: '/deudas',
+        name: 'Deudas',
+        component: () => import("../components/Deuda/DeudaIndex.vue")
+    },
+    {
+        path: '/deuda/:id',
+        name: 'DeudaDetalle',
+        component: () => import("../components/Deuda/DeudaView.vue")
+    },
+    {
+        path: '/deuda/:id/pago',
+        name: 'DeudaPago',
+        component: () => import("../components/Deuda/DeudaPago.vue")
+    },
 ]
 
 function Adminauthorization(to, from, next) {

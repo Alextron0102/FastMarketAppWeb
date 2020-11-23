@@ -75,6 +75,15 @@
       </div>
 
       <div class="field">
+        <input
+          v-model="model.lineaCredito"
+          class="input"
+          type="text"
+          placeholder="Ingrese el maximo de credito"
+        />
+      </div>
+
+      <div class="field">
         <button type="submit" class="button is-info">Guardar</button>
         <router-link :to="{ name: 'Clientes' }">
           <button class="button is-danger is-normal">Salir</button>

@@ -33,6 +33,10 @@
               class="navbar-item" :to="{name: 'Tasas'}">
             Tasas
             </router-link>
+            <router-link :class="{ 'is-active': $route.name === 'Deudas' }" v-if="user.roles.includes('ADMIN')"
+              class="navbar-item" :to="{name: 'Deudas'}">
+            Deudas
+            </router-link>
             <span class="navbar-item">
               <a @click="logout" class="button is-danger is-inverted">
                 <span class="icon">

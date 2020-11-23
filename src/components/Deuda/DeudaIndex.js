@@ -2,7 +2,7 @@ import Loader from '../../shared/Loader'
 import Pager from '../../shared/Pager'
 
 export default {
-    name: 'OrdenIndex',
+    name: 'DeudaIndex',
     components: {
         Loader,
         Pager
@@ -27,19 +27,9 @@ export default {
     methods: {
         getAll(page) {
             this.isLoading = true;
-            this.$proxies.ordenProxy.getAll(page, this.collection.take)
+            this.$proxies.deudaProxy.getAll(page, this.collection.take)
                 .then(x => {
                     this.collection = x.data;
-                    this.isLoading = false;
-                }).catch(() => {
-                    this.isLoading = false;
-                });
-        },
-        remove(id) {
-            this.isLoading = true;
-            this.$proxies.ordenProxy.remove(id)
-                .then(() => {
-                    this.getAll(this.collection.page);
                     this.isLoading = false;
                 }).catch(() => {
                     this.isLoading = false;
